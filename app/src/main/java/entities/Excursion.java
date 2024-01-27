@@ -13,7 +13,6 @@ public class Excursion {
     private String excursionTitle;
     private String excursionStartDate;
 
-    @Ignore
     public Excursion() {}
 
     public int getExcursionId() {

@@ -13,13 +13,16 @@
         android:theme="@style/Theme.VacationApp"
         tools:targetApi="31">
         <activity
-            android:name="UI.VacationDetails"
+            android:name=".main.UI.ExcursionDetails"
             android:exported="false" />
         <activity
-            android:name="main.VacationList"
+            android:name=".main.UI.VacationDetails"
             android:exported="false" />
         <activity
-            android:name="main.MainActivity"
+            android:name=".main.UI.VacationList"
+            android:exported="false" />
+        <activity
+            android:name=".main.UI.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package UI;
+package com.example.vacationapp.main.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 

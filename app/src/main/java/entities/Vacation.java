@@ -14,7 +14,6 @@ public class Vacation {
     private String vacationStartDate;
     private String vacationEndDate;
 
-    @Ignore
     public Vacation() {}
 
     public Vacation(int vacationId, String vacationTitle, String vacationLodging, String vacationStartDate,
