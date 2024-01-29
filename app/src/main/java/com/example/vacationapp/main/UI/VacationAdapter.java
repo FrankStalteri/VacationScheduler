@@ -15,10 +15,12 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.MyView
 
     Context context;
     ArrayList<Vacation> vacationList;
+    private final RecyclerViewInterface recyclerViewInterface;
 
-    public VacationAdapter(Context context, ArrayList<Vacation> vacationList) {
+    public VacationAdapter(Context context, ArrayList<Vacation> vacationList, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
         this.vacationList = vacationList;
+        this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
@@ -29,7 +31,7 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.MyView
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.recycler_view_row, parent, false);
 
-        return new VacationAdapter.MyViewHolder(view);
+        return new VacationAdapter.MyViewHolder(view, recyclerViewInterface);
     }
 
     @Override
@@ -51,10 +53,22 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.MyView
 
         TextView vacationTxt;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
 
             vacationTxt = itemView.findViewById(R.id.vacationListTxt);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (recyclerViewInterface != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            recyclerViewInterface.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }
