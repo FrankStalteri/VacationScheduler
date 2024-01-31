@@ -1,6 +1,7 @@
 package com.example.vacationapp.main.UI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,67 +9,85 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.vacationapp.R;
-import java.util.ArrayList;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
+
 import entities.Vacation;
 
-public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.MyViewHolder> {
+public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.VacationViewHolder> {
 
-    Context context;
-    ArrayList<Vacation> vacationList;
-    private final RecyclerViewInterface recyclerViewInterface;
+    private final LayoutInflater mInflater;
+    private final Context context;
+    private List<Vacation> vacationList;
 
-    public VacationAdapter(Context context, ArrayList<Vacation> vacationList, RecyclerViewInterface recyclerViewInterface) {
-        this.context = context;
-        this.vacationList = vacationList;
-        this.recyclerViewInterface = recyclerViewInterface;
-    }
+    class VacationViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull
-    @Override
-    public VacationAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout recycler_view_row and give the look to the rows
+        private final TextView vacationListItem;
 
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.recycler_view_row, parent, false);
-
-        return new VacationAdapter.MyViewHolder(view, recyclerViewInterface);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull VacationAdapter.MyViewHolder holder, int position) {
-        // Assign values to the views
-
-        holder.vacationTxt.setText(vacationList.get(position).getVacationTitle());
-    }
-
-    @Override
-    public int getItemCount() {
-        // How many items i have in the list of vacations
-
-        return vacationList.size();
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        // Grab the views from the recycler_view_row layout and add them here
-
-        TextView vacationTxt;
-
-        public MyViewHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
+        private VacationViewHolder(View itemView) {
             super(itemView);
-
-            vacationTxt = itemView.findViewById(R.id.vacationListTxt);
+            vacationListItem = itemView.findViewById(R.id.vacation_list_text_view);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    if (recyclerViewInterface != null) {
-                        int position = getAdapterPosition();
+                public void onClick(View view){
 
-                        if (position != RecyclerView.NO_POSITION) {
-                            recyclerViewInterface.onItemClick(position);
-                        }
-                    }
+                    String myFormat = "MM/dd/yy"; //In which you need put here
+                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                    int position = getAdapterPosition();
+                    final Vacation current = vacationList.get(position);
+
+                    //Intent is used to switch screens
+                    Intent intent = new Intent(context, VacationDetails.class);
+
+                    intent.putExtra("vacationId", current.getVacationId());
+                    intent.putExtra("vacationTitle", current.getVacationTitle());
+                    intent.putExtra("vacationLodging", current.getVacationLodging());
+                    intent.putExtra("vacationStartDate", current.getVacationStartDate());
+                    intent.putExtra("vacationEndDate", current.getVacationEndDate());
+                    intent.putExtra("position", position);
+                    context.startActivity(intent);
                 }
+
             });
         }
+    }
+
+    public VacationAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+        this.context = context;
+    }
+    @NonNull
+    @Override
+    public VacationAdapter.VacationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.activity_vacation_list_item, parent,false);
+        return new VacationViewHolder((itemView));
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull VacationAdapter.VacationViewHolder holder,int position) {
+
+        if(vacationList != null) {
+            Vacation current = vacationList.get(position);
+            String title =  current.getVacationTitle();
+            holder.vacationListItem.setText(title);
+
+        }else{
+            holder.vacationListItem.setText("No Title");
+        }
+    }
+
+    @Override
+    public int getItemCount(){
+        if(vacationList != null)
+            return vacationList.size();
+        else return 0;
+    }
+
+    public void setVacations(List<Vacation> vacations){
+        vacationList = vacations;
+        notifyDataSetChanged();
     }
 }

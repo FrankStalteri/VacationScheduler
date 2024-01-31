@@ -1,7 +1,6 @@
 package entities;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Excursions")
@@ -14,6 +13,13 @@ public class Excursion {
     private String excursionStartDate;
 
     public Excursion() {}
+
+    public Excursion(int excursionId, int vacationId, String excursionTitle, String excursionStartDate) {
+        this.excursionId = excursionId;
+        this.vacationId = vacationId;
+        this.excursionTitle = excursionTitle;
+        this.excursionStartDate = excursionStartDate;
+    }
 
     public int getExcursionId() {
         return excursionId;

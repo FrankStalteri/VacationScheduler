@@ -6,66 +6,79 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import com.example.vacationapp.R;
-import java.util.ArrayList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+
 import database.Repository;
-import entities.Excursion;
+
 import entities.Vacation;
 
-public class VacationList extends AppCompatActivity implements RecyclerViewInterface {
-
-    ArrayList<Vacation> vacationList = new ArrayList<>();
-    Repository repository;
-    ArrayList<Excursion> excursionList = new ArrayList<>();
+public class VacationList extends AppCompatActivity {
+    private Repository repository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vacation_list);
 
-        Button button = findViewById(R.id.button2);
-        repository = new Repository(getApplication());
+        RecyclerView recyclerView = findViewById(R.id.vacation_recycler_view);
+        final VacationAdapter vacationAdapter = new VacationAdapter(this);
 
-        // Get the vacations and excursions from the Room database
-        vacationList.addAll(repository.getVacations());
-        excursionList.addAll(repository.getAllExcursions());
-
-        for (int i = 0; i < vacationList.size(); i++) {
-            System.out.println(vacationList.get(i));
-        }
-        for (int j = 0; j < excursionList.size(); j++) {
-            System.out.println(excursionList.get(j));
-        }
-
-        // Setup the adapter for the recycler view
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        VacationAdapter adapter = new VacationAdapter(this, vacationList, this);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(vacationAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        repository = new Repository(getApplication());
+        List<Vacation> allVacations = repository.getVacations();
 
-        button.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = findViewById(R.id.vacationListfab);
+
+        vacationAdapter.setVacations(allVacations);
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(VacationList.this, VacationDetails.class);
                 startActivity(intent);
             }
         });
     }
-
-    // Adds click feature to each recycler view row item
     @Override
-    public void onItemClick(int position) {
-        // Move to the page to display the whole vacation and excursion details
-        Intent intent = new Intent(VacationList.this, VacationExcursionDetails.class);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_vacation_list, menu);
+        return true;
+    }
 
-        // Send over the data needed to populate the fields in the VacationExcursionDetails file
-        intent.putExtra("vacationTitle", vacationList.get(position).getVacationTitle());
-        intent.putExtra("excursionTitle", excursionList.get(position).getExcursionTitle());
-        intent.putExtra("excursionStartDate", excursionList.get(position).getExcursionStartDate());
-        intent.putExtra("excursionEndDate", vacationList.get(position).getVacationEndDate());
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        startActivity(intent);
+        int id = item.getItemId();
+
+        if (id == R.id.vacation_refresh) {
+            RecyclerView recyclerView = findViewById(R.id.vacation_recycler_view);
+            final VacationAdapter adapter = new VacationAdapter(this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            adapter.setVacations(repository.getVacations());
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RecyclerView recyclerView = findViewById(R.id.vacation_recycler_view);
+        final VacationAdapter vacationAdapter = new VacationAdapter(this);
+        recyclerView.setAdapter(vacationAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        vacationAdapter.setVacations(repository.getVacations());
     }
 }
