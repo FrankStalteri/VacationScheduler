@@ -48,8 +48,7 @@ public class VacationList extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_vacation_list, menu);
+        getMenuInflater().inflate(R.menu.vacation_list_menu, menu);
         return true;
     }
 
@@ -62,6 +61,7 @@ public class VacationList extends AppCompatActivity {
             RecyclerView recyclerView = findViewById(R.id.vacation_recycler_view);
             final VacationAdapter adapter = new VacationAdapter(this);
             recyclerView.setAdapter(adapter);
+
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             adapter.setVacations(repository.getVacations());
 
@@ -78,6 +78,7 @@ public class VacationList extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.vacation_recycler_view);
         final VacationAdapter vacationAdapter = new VacationAdapter(this);
         recyclerView.setAdapter(vacationAdapter);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         vacationAdapter.setVacations(repository.getVacations());
     }

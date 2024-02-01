@@ -33,13 +33,12 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
                 @Override
                 public void onClick(View view){
 
-                    String myFormat = "MM/dd/yy"; //In which you need put here
-                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                    String dateFormat = "MM/dd/yy"; //In which you need put here
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
                     int position = getAdapterPosition();
                     final Vacation current = vacationList.get(position);
 
-                    //Intent is used to switch screens
                     Intent intent = new Intent(context, VacationDetails.class);
 
                     intent.putExtra("vacationId", current.getVacationId());

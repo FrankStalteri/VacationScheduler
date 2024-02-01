@@ -84,12 +84,11 @@ public class VacationDetails extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendarStart.set(Calendar.YEAR, year);
                 myCalendarStart.set(Calendar.MONTH, monthOfYear);
                 myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "MM/dd/yy";
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                String dateFormat = "MM/dd/yy";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
                 updateLabelStart();
             }
@@ -116,8 +115,8 @@ public class VacationDetails extends AppCompatActivity {
                 myCalendarEnd.set(Calendar.YEAR, year);
                 myCalendarEnd.set(Calendar.MONTH, monthOfYear);
                 myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "MM/dd/yy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                String dateFormat = "MM/dd/yy";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
                 updateLabelEnd();
             }
@@ -161,45 +160,46 @@ public class VacationDetails extends AppCompatActivity {
         final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
         recyclerView.setAdapter(excursionAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<Excursion> filteredExcursions = new ArrayList<>();
+        List<Excursion> excursionList = new ArrayList<>();
         for (Excursion e : repository.getAllExcursions()) {
-            if (e.getVacationId() == vacationId) filteredExcursions.add(e);
+            if (e.getVacationId() == vacationId) excursionList.add(e);
         }
-        excursionAdapter.setExcursions(filteredExcursions);
+        excursionAdapter.setExcursions(excursionList);
 
     }
 
     private void updateLabelStart() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        String dateFormat = "MM/dd/yy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
-        vacationStartText.setText(sdf.format(myCalendarStart.getTime()));
+        vacationStartText.setText(simpleDateFormat.format(myCalendarStart.getTime()));
     }
 
     private void updateLabelEnd() {
-        String myFormat = "MM/dd/yy";
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        String dateFormat = "MM/dd/yy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
-        vacationEndText.setText(sdf.format(myCalendarEnd.getTime()));
+        vacationEndText.setText(simpleDateFormat.format(myCalendarEnd.getTime()));
     }
 
     private boolean dateCheck() {
 
-        Date startDateVac = new Date();
+        Date vacationStartDate = new Date();
         try {
-            startDateVac = new SimpleDateFormat("MM/dd/yy").parse(start_date);
+            vacationStartDate = new SimpleDateFormat("MM/dd/yy").parse(start_date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        Date endDateVac = new Date();
+        Date vacationEndDate = new Date();
         try {
-            endDateVac = new SimpleDateFormat("MM/dd/yy").parse(end_date);
+            vacationEndDate = new SimpleDateFormat("MM/dd/yy").parse(end_date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        if (startDateVac.before(endDateVac)){
+        // Check if the end date is before the start date
+        if (vacationStartDate.before(vacationEndDate)){
             return true;
         }else{
             return false;
@@ -252,7 +252,7 @@ public class VacationDetails extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
-        getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
+        getMenuInflater().inflate(R.menu.vacation_details_menu, menu);
         return true;
     }
 
@@ -307,14 +307,14 @@ public class VacationDetails extends AppCompatActivity {
         }
 
         if (id == R.id.delete) {
-            for (Vacation vac : repository.getVacations()) {
-                if (vac.getVacationId() == Integer.parseInt(String.valueOf(vacationId)))
-                    currentVac = vac;
+            for (Vacation vacation : repository.getVacations()) {
+                if (vacation.getVacationId() == Integer.parseInt(String.valueOf(vacationId)))
+                    currentVac = vacation;
             }
 
             numExc = 0;
-            for (Excursion exc : repository.getAllExcursions()) {
-                if (exc.getVacationId() == Integer.parseInt(String.valueOf(vacationId)))
+            for (Excursion excursion : repository.getAllExcursions()) {
+                if (excursion.getVacationId() == Integer.parseInt(String.valueOf(vacationId)))
                     ++numExc;
             }
 
@@ -329,14 +329,16 @@ public class VacationDetails extends AppCompatActivity {
         }
 
         if (id == R.id.share) {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, vacationTitleText.getText().toString() + " " + vacationLodgingText.getText().toString() + " " +
-                    vacationStartText.getText().toString() + " " + vacationEndText.getText().toString());
-            sendIntent.putExtra(Intent.EXTRA_TITLE, "This destination looks amazing!");
-            sendIntent.setType("text/plain");
 
-            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+
+            intent.putExtra(Intent.EXTRA_TEXT, vacationTitleText.getText().toString() + " " + vacationLodgingText.getText().toString() + " " +
+                    vacationStartText.getText().toString() + " " + vacationEndText.getText().toString());
+            intent.putExtra(Intent.EXTRA_TITLE, "This destination looks amazing!");
+            intent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(intent, null);
             startActivity(shareIntent);
             return true;
         }
@@ -344,11 +346,11 @@ public class VacationDetails extends AppCompatActivity {
         if (id == R.id.start_alert)
         {
             String dateFromScreen = vacationStartText.getText().toString();
-            String myFormat = "MM/dd/yy"; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+            String dateFormat = "MM/dd/yy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
             Date myDate = null;
             try {
-                myDate = sdf.parse(dateFromScreen);
+                myDate = simpleDateFormat.parse(dateFromScreen);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -356,6 +358,7 @@ public class VacationDetails extends AppCompatActivity {
                 Long trigger = myDate.getTime();
                 Intent intent = new Intent(VacationDetails.this, MyReceiver.class);
                 intent.putExtra("key", title + " is starting");
+
                 PendingIntent sender = PendingIntent.getBroadcast(VacationDetails.this, ++MainActivity.nAlert, intent, PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);}
@@ -365,15 +368,14 @@ public class VacationDetails extends AppCompatActivity {
             return true;
         }
 
-        //nAlert must have its own unique id and be static so the entire app can see
-
         if (id == R.id.end_alert) {
             String dateFromScreen = vacationStartText.getText().toString();
-            String myFormat = "MM/dd/yy"; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+            String dateFormat = "MM/dd/yy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
             Date myDate = null;
+
             try {
-                myDate = sdf.parse(dateFromScreen);
+                myDate = simpleDateFormat.parse(dateFromScreen);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -381,6 +383,7 @@ public class VacationDetails extends AppCompatActivity {
                 Long trigger = myDate.getTime();
                 Intent intent = new Intent(VacationDetails.this, MyReceiver.class);
                 intent.putExtra("key", title + " is ending");
+
                 PendingIntent sender = PendingIntent.getBroadcast(VacationDetails.this, ++MainActivity.nAlert, intent, PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);}
@@ -392,12 +395,16 @@ public class VacationDetails extends AppCompatActivity {
         }
 
         if (id == R.id.refresh) {
+
             RecyclerView recyclerView = findViewById(R.id.excursion_recycler_view);
             repository = new Repository(getApplication());
+
             final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
             recyclerView.setAdapter(excursionAdapter);
+
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             List<Excursion> filteredExcursions = new ArrayList<>();
+
             for (Excursion e : repository.getAllExcursions()) {
                 if (e.getVacationId() == vacationId) filteredExcursions.add(e);
             }
@@ -413,12 +420,15 @@ public class VacationDetails extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
         super.onResume();
         RecyclerView recyclerView = findViewById(R.id.excursion_recycler_view);
         final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
         recyclerView.setAdapter(excursionAdapter);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Excursion> filteredExcursions = new ArrayList<>();
+
         for (Excursion e : repository.getAllExcursions()) {
             if(e.getVacationId() == vacationId) filteredExcursions.add(e);
         }

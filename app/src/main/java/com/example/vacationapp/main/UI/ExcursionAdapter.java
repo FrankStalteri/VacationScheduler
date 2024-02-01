@@ -27,18 +27,18 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
                 @Override
                 public void onClick(View view) {
 
-                    String myFormat = "MM/dd/yy"; //In which you need put here
-                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                    String dateFormat = "MM/dd/yy";
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
                     int position = getAdapterPosition();
-                    final Excursion current = excursionList.get(position);
+                    final Excursion excursion = excursionList.get(position);
 
                     Intent intent = new Intent(context, ExcursionDetails.class);
 
-                    intent.putExtra("vacationId", current.getVacationId());
-                    intent.putExtra("excursionId", current.getExcursionId());
-                    intent.putExtra("excursionTitle", current.getExcursionTitle());
-                    intent.putExtra("excursionStartDate", current.getExcursionStartDate());
+                    intent.putExtra("vacationId", excursion.getVacationId());
+                    intent.putExtra("excursionId", excursion.getExcursionId());
+                    intent.putExtra("excursionTitle", excursion.getExcursionTitle());
+                    intent.putExtra("excursionStartDate", excursion.getExcursionStartDate());
                     context.startActivity(intent);
                 }
 

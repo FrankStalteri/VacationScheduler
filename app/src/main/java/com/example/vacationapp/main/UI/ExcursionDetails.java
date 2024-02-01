@@ -57,8 +57,6 @@ public class ExcursionDetails extends AppCompatActivity {
         title = getIntent().getStringExtra("excursionTitle");
         date = getIntent().getStringExtra("excursionStartDate");
 
-        //how to get data from another class object, create object list, modified for loop,
-        //matching variables from class to class, declare variable then set.
         List<Vacation> myVacations = repository.getVacations();
         for (Vacation v : myVacations){
             if(v.getVacationId() == vacationId){
@@ -92,7 +90,6 @@ public class ExcursionDetails extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 new DatePickerDialog(ExcursionDetails.this, excursionDateCalendar, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -104,7 +101,7 @@ public class ExcursionDetails extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_excursion_details, menu);
+        getMenuInflater().inflate(R.menu.excursion_details_menu, menu);
         return true;
     }
 
@@ -128,9 +125,9 @@ public class ExcursionDetails extends AppCompatActivity {
 
                     String title = excursionTitleText.getText().toString();
 
-                    Excursion newExcursion = new Excursion(0, vacationId, title, date);
+                    Excursion e = new Excursion(0, vacationId, title, date);
 
-                    repository.insert(newExcursion);
+                    repository.insert(e);
 
                     Toast.makeText(ExcursionDetails.this, "Excursion Added", Toast.LENGTH_LONG).show();
 
@@ -141,9 +138,9 @@ public class ExcursionDetails extends AppCompatActivity {
                     String title = excursionTitleText.getText().toString();
                     String date = excursionDateText.getText().toString();
 
-                    Excursion newExcursion = new Excursion(excursionId, vacationId, title, date);
+                    Excursion e = new Excursion(excursionId, vacationId, title, date);
 
-                    repository.update(newExcursion);
+                    repository.update(e);
 
                     Toast.makeText(ExcursionDetails.this, "Excursion Updated", Toast.LENGTH_LONG).show();
 
@@ -161,8 +158,8 @@ public class ExcursionDetails extends AppCompatActivity {
 
         if (id == R.id.excursion_delete) {
 
-            for (Excursion exc : repository.getAllExcursions()) {
-                if (exc.getExcursionId() == excursionId) excursion = exc;
+            for (Excursion e : repository.getAllExcursions()) {
+                if (e.getExcursionId() == excursionId) excursion = e;
             }
 
             repository.delete(excursion);
