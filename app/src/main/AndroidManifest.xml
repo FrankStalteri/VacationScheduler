@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,10 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VacationApp"
         tools:targetApi="31">
+        <activity
+            android:name=".main.UI.VacationLogReport"
+            android:exported="false" />
+
         <receiver
             android:name=".main.UI.MyReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
         <activity
             android:name=".main.UI.ExcursionDetails"
             android:exported="false" />

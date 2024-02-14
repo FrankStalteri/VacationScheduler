@@ -1,10 +1,13 @@
 package com.example.vacationapp.main.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -36,5 +39,19 @@ public class MainActivity extends AppCompatActivity {
         // Create the menu; add items to the bar if it is present.
         getMenuInflater().inflate(R.menu.base_menu, menu);
         return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.report) {
+            Intent intent = new Intent(MainActivity.this, VacationLogReport.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

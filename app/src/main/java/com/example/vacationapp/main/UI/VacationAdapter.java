@@ -31,9 +31,9 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
             vacationListItem = itemView.findViewById(R.id.vacation_list_text_view);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
+                public void onClick(View view) {
 
-                    String dateFormat = "MM/dd/yy"; //In which you need put here
+                    String dateFormat = "MM/dd/yy";
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
 
                     int position = getAdapterPosition();
@@ -58,34 +58,35 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
         mInflater = LayoutInflater.from(context);
         this.context = context;
     }
+
     @NonNull
     @Override
     public VacationAdapter.VacationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.activity_vacation_list_item, parent,false);
+        View itemView = mInflater.inflate(R.layout.activity_vacation_list_item, parent, false);
         return new VacationViewHolder((itemView));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VacationAdapter.VacationViewHolder holder,int position) {
+    public void onBindViewHolder(@NonNull VacationAdapter.VacationViewHolder holder, int position) {
 
-        if(vacationList != null) {
+        if (vacationList != null) {
             Vacation current = vacationList.get(position);
-            String title =  current.getVacationTitle();
+            String title = current.getVacationTitle();
             holder.vacationListItem.setText(title);
 
-        }else{
+        } else {
             holder.vacationListItem.setText("No Title");
         }
     }
 
     @Override
-    public int getItemCount(){
-        if(vacationList != null)
+    public int getItemCount() {
+        if (vacationList != null)
             return vacationList.size();
         else return 0;
     }
 
-    public void setVacations(List<Vacation> vacations){
+    public void setVacations(List<Vacation> vacations) {
         vacationList = vacations;
         notifyDataSetChanged();
     }

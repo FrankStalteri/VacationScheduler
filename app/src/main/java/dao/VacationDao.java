@@ -1,5 +1,6 @@
 package dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -28,4 +29,8 @@ public interface VacationDao {
 
     @Query("SELECT * FROM VACATIONS WHERE VACATIONID = VACATIONID ORDER BY VACATIONID ASC")
     List<Vacation> getAllVacationsById();
+
+    // Search Functionality
+    @Query("Select * From Vacations Where vacationTitle Like :query")
+    List<Vacation> getVacationsByName(String query);
 }
